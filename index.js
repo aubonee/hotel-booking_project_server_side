@@ -31,6 +31,7 @@ async function run() {
     await client.connect();
 
     const roomsCollection =client.db('hoteldb').collection('roomsCollection');
+    const bookingsCollection =client.db('hoteldb').collection('bookingsCollection');
 //get all rooms
 
     app.get('/rooms',async(req,res)=>{
@@ -54,6 +55,33 @@ async function run() {
         res.send(result);
         
       })
+
+      //////////////cart
+  // app.post('/cart', async(req,res)=>{ 
+  //   const newproduct =req.body;
+  //   delete newproduct._id;
+  //   console.log(newproduct);
+  //   const result =await cartCollection.insertOne(newproduct);
+  //   res.send(result);
+
+  // })
+
+  app.post('/bookings', async(req,res)=>{ 
+    const newbooking =req.body;
+    delete newbooking._id;
+    console.log(newbooking);
+    const result =await bookingsCollection.insertOne(newbooking);
+    res.send(result);
+
+  })
+
+  app.get('/bookings/:email', async (req, res) => {
+    const email  = req.params.email;
+    const query = { email }
+    const result = await bookingsCollection.find(query).toArray();
+    res.send(result);
+    
+  })
 
    
     // Send a ping to confirm a successful connection
