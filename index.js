@@ -55,22 +55,26 @@ async function run() {
         res.send(result);
         
       })
-
-      //////////////cart
-  // app.post('/cart', async(req,res)=>{ 
-  //   const newproduct =req.body;
-  //   delete newproduct._id;
-  //   console.log(newproduct);
-  //   const result =await cartCollection.insertOne(newproduct);
-  //   res.send(result);
-
-  // })
+////////////////////booking
+ 
 
   app.post('/bookings', async(req,res)=>{ 
     const newbooking =req.body;
+    const id = newbooking._id;
     delete newbooking._id;
     console.log(newbooking);
     const result =await bookingsCollection.insertOne(newbooking);
+/////////////////////
+    // const quantity = await roomsCollection.findOneAndUpdate(
+    //   { _id: new ObjectId(id) },
+    //   { $inc: { quantity: -1 } }
+    // );
+    //////////////////
+    await roomsCollection.findOneAndUpdate(
+      { _id: new ObjectId(id) },
+      { $inc: { quantity: -1 } }
+    );
+   
     res.send(result);
 
   })
@@ -82,6 +86,14 @@ async function run() {
     res.send(result);
     
   })
+///booking data delete
+  app.delete('/bookings/:id', async (req, res) => {
+    const id = req.params.id;
+    const query = { _id: new ObjectId(id) }
+    const result = await bookingsCollection.deleteOne(query);
+    res.send(result);
+})
+///////////////////////////////////
 
    
     // Send a ping to confirm a successful connection
