@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
 const app =express();
@@ -7,8 +9,13 @@ const app =express();
 const port =process.env.PORT || 5000;
 
 //middleware
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173'],
+  credentials: true
+
+}));
 app.use(express.json());
+app.use(cookieParser());
 
 //hoteldb_user
 //i2i9qHxX2RwdKVoW
@@ -25,6 +32,11 @@ const client = new MongoClient(uri, {
   }
 });
 
+//middlewares
+const logger = async(req,res, next)=>{
+    console.log('called:',req.host, req.originalUrl)
+    next();
+}
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
@@ -32,7 +44,18 @@ async function run() {
 
     const roomsCollection =client.db('hoteldb').collection('roomsCollection');
     const bookingsCollection =client.db('hoteldb').collection('bookingsCollection');
-//get all rooms
+//////////auth related api
+
+app.post('/jwt',async(req,res)=>{
+  const user =req.body;
+  console.log(user);
+  const token = jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn: '1h'})
+ console.log(token);
+  res.cookie('token',token,{
+    httpOnly : true,  secure: false, }).send({success:true})
+})
+////////server related Api
+    //get all rooms
 
     app.get('/rooms',async(req,res)=>{
         const cursor =roomsCollection.find();
@@ -79,8 +102,9 @@ async function run() {
 
   })
 
-  app.get('/bookings/:email', async (req, res) => {
+  app.get('/bookings/:email', logger, async (req, res) => {
     const email  = req.params.email;
+    console.log('token:', req.cookies.token)
     const query = { email }
     const result = await bookingsCollection.find(query).toArray();
     res.send(result);
