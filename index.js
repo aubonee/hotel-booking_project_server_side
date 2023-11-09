@@ -12,8 +12,8 @@ const port =process.env.PORT || 5000;
 app.use(cors({
  // origin: ['http://localhost:5173'],
   origin: [
-    'https://hotel-service-5e6d3.web.app/',
-  'https://hotel-service-5e6d3.firebaseapp.com/'],
+    'https://hotel-service-5e6d3.firebaseapp.com/',
+    'https://hotel-service-5e6d3.web.app/'],
   credentials: true
 
 }));
@@ -22,6 +22,8 @@ app.use(cookieParser());
 
 //hoteldb_user
 //i2i9qHxX2RwdKVoW
+//newuser
+//abcd1234
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.jkbvpzz.mongodb.net/?retryWrites=true&w=majority`;
 //const uri = `mongodb+srv://hoteldb_user:i2i9qHxX2RwdKVoW@cluster0.jkbvpzz.mongodb.net/?retryWrites=true&w=majority`;
