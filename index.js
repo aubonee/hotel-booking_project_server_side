@@ -10,10 +10,10 @@ const port =process.env.PORT || 5000;
 
 //middleware
 app.use(cors({
-  origin: ['http://localhost:5173'],
-  // origin: [//'http://localhost:5173'
-  //   'https://hotel-service-5e6d3.web.app/',
-  // 'https://hotel-service-5e6d3.firebaseapp.com/'],
+ // origin: ['http://localhost:5173'],
+  origin: [
+    'https://hotel-service-5e6d3.web.app/',
+  'https://hotel-service-5e6d3.firebaseapp.com/'],
   credentials: true
 
 }));
@@ -60,7 +60,7 @@ const verifyToken = (req, res, next) => {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    //await client.connect();
 
     const roomsCollection =client.db('hoteldb').collection('roomsCollection');
     const bookingsCollection =client.db('hoteldb').collection('bookingsCollection');
@@ -145,12 +145,12 @@ app.post('/jwt',async(req,res)=>{
 
    
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+   // await client.db("admin").command({ ping: 1 });
+   // console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } 
-  catch (error) {
-    console.error('An error occurred:', error);
-  }
+  // catch (error) {
+  //   console.error('An error occurred:', error);
+  // }
   finally {
     // Ensures that the client will close when you finish/error
    // await client.close();
