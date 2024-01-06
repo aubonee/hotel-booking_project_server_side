@@ -67,6 +67,7 @@ async function run() {
     const roomsCollection =client.db('hoteldb').collection('roomsCollection');
     const bookingsCollection =client.db('hoteldb').collection('bookingsCollection');
     const userCollection =client.db('hoteldb').collection('users');
+    const reviewCollection =client.db('hoteldb').collection('reviewCollection');
 //////////auth related api
 
 app.post('/jwt',async(req,res)=>{
@@ -79,6 +80,22 @@ app.post('/jwt',async(req,res)=>{
     sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict' }).send({success:true})
 })
 ////////server related Api
+///////////add review (post)
+app.post('/review', async(req,res)=>{ 
+  const newReview =req.body;
+  console.log(newReview);
+  const result =await reviewCollection.insertOne(newReview);
+  res.send(result);
+
+})
+
+/////get reviews
+app.get('/review', async(req,res)=>{
+  const cursor =reviewCollection.find();
+  const result =await cursor.toArray();
+  res.send(result);
+
+})
     //get all rooms
 
     app.get('/rooms',async(req,res)=>{
